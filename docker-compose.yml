@@ -1,7 +1,5 @@
-# Файл docker-compose.yml
 volumes:
   pg_data:
-# Новый volume — для статических файлов
   static:
 
 services:
@@ -13,7 +11,6 @@ services:
   backend:
     build: ./backend/
     env_file: .env
-    # Тут подключаем volume к backend
     volumes:
       - static:/backend_static
     depends_on:
@@ -24,16 +21,10 @@ services:
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
-# Добавляем новый контейнер: gateway
   gateway:
-    # Сбилдить и запустить образ, 
-    # описанный в Dockerfile в папке gateway
     build: ./gateway/
     volumes:
       - static:/staticfiles
-    # Ключ ports устанавливает
-    # перенаправление всех запросов с порта 8000 хоста
-    # на порт 80 контейнера
     ports:
       - 8000:80
     depends_on:
